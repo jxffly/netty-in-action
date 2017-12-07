@@ -1,14 +1,15 @@
 package nia.chapter2.echoclient;
 
+import java.net.InetSocketAddress;
+
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.net.InetSocketAddress;
 
 /**
  * Listing 2.4 Main class for the client
@@ -41,7 +42,9 @@ public class EchoClient {
                     }
                 });
             ChannelFuture f = b.connect().sync();
-            f.channel().closeFuture().sync();
+            Channel channel = f.channel();
+            boolean active = channel.isActive();
+            System.out.println(active);
         } finally {
             group.shutdownGracefully().sync();
         }
